@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加事件</title>
+</head>
+<body>
+<td>
+	<tr>
+<form action="{% url 'add' %}" method="post">
+    {% csrf_token %}
+    {{ todo_form.as_table }}
+    <!--事件：<input type="text" name="content"><br />-->
+    <button type='submit'>add</button>
+</form>
+</tr>
+<tr>
+
+{% for post in posts %}
+	{{ post.content}}
+	{{ post.time}}
+	{{post.status}}
+{% endfor%}
+</tr>
+</td>
+<td><a href="/delete/{{ post.id }}" class="btn btn-danger">删除</a></td>-->
+
+</body>
+</html>

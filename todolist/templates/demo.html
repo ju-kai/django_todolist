@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ToDoList</title>
+<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"><!-- Custom CSS -->
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+<link href="{% static 'css/jquerysctipttop.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div class="container" id="main">
+	
+	    <h1>ToDoList</h1>
+
+        <form role="form" id="main_input_box" action="{% url 'add' %}" method="post">
+            <label>
+                {% csrf_token %}
+                {{ todo_form.content }}
+                <input type="submit" value="Add" class="btn btn-primary add_button">
+            </label>
+        </form>
+
+
+        <ul class="list-group list_of_items" style="list-style-type:none">
+            <li class="list-group-item">
+                {% if contacts %}
+                    {% for contact in contacts %}
+                        <div class="text_holder">
+                            <!--{{ contact.content}}-->
+                            <td>
+                                {% if contact.edit_status == 0 %}
+                                    {{ contact.content }}
+                                {% else %}
+                                    <form role="form" id="main_input_" action=" {% url 'edited' contact.id %}" method="post">
+                                        <label>
+                                            {% csrf_token %}
+                                            <input type="text"  name="content" class="form-control" id="custom_textbox">
+                                            <input type="submit" value="确认编辑" class="btn btn-primary add_button">
+                                        </label>
+                                    </form>
+                                {% endif %}
+                            </td>
+
+                            <div class="btn-group pull-right">
+                                <a href="/delete/{{ contact.id }}" class="delete btn btn-warning">删除</a>
+
+                                {% if contact.edit_status == 0 %}
+                                    <a href="/editing/{{ contact.id }}" class="edit btn btn-success">编辑</a>
+                                {% else %}
+                                    <a href="/edited/{{ contact.id }}" class="edit btn btn-success">撤销编辑</a>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="checkbox">
+                                {% if contact.status == 1 %}
+                                    <td><a href="/undone/{{ contact.id }}" class="pull-right" type="checkbox">未完成</a></td>
+                                {% else %}
+                                    <td><a href="/done/{{ contact.id }}" class="pull-right" type="checkbox">已完成</a></td>
+                                {% endif %}
+                            </div>
+                        </div>
+                            <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
+                    {% endfor %}
+                        {# 分页#}
+                        {{ contact.content|upper }}<br />
+                {% endif %}
+            </li>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if contacts.has_previous %}
+                        <a href="?page={{ contacts.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+                    </span>
+
+                    {% if contacts.has_next %}
+                        <a href="?page={{ contacts.next_page_number }}">下一页</a>
+                    {% endif %}
+                </span>
+            </div>
+
+
+        </ul>
+	</div>
+</body></html>
